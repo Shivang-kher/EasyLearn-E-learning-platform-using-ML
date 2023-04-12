@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>EasNotes</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shoelace-css/1.0.0-beta16/shoelace.css">
+    <link rel="stylesheet" href="./css/notes.css">
+
+</head>
+
+<body>
+    <div class="services-section">
+        <div class="inner-width">
+
+
+            <h1 class="section-title">Easy Learn Note Taker</h1>
+
+            <div class="border"></div>
+            <div class="services-container">
+                <div class="container">
+                    <p class="page-description" style="color:whitesmoke">Easy Learn Note Taker helps you to record your notes and save them in a text format to make learning experience better.</p>
+
+                    <h3 class="no-browser-support">Sorry, Your Browser Doesn't Support the Web Speech API. Try Opening
+                        This Demo In Google Chrome.</h3>
+
+                    <div class="app">
+                        <h3>Make New Note </h3>
+                        <div class="input-single">
+                            <textarea id="note-textarea"
+                                placeholder="Create a new note by typing or using voice recognition."
+                                rows="6"></textarea>
+                        </div>
+
+                        <button id="start-record-btn" title="Start Recording" class="btn btn-1 btn-1b">Start
+                            Recognition</button>
+                        <button id="pause-record-btn" title="Pause Recording" class="btn btn-1 btn-1b">Pause
+                            Recognition</button>
+                        <button id="save-note-btn" title="Save Note" class="btn btn-1 btn-1b">Save Note</button>
+                        <button id="save-note-btn" title="To text" onclick="saveFile()"
+                            class="btn btn-1 btn-1b">Download Notes</button>
+
+                        <p id="recording-instructions">Press the <strong>Start Recognition</strong> button and allow
+                            access.</p>
+                        <hr>
+                        <h2>My Notes</h2>
+                        <ul id="notes">
+                            <li>
+                                <p class="no-notes">You don't have any notes.</p>
+                            </li>
+                        </ul>
+                        <hr>
+                       
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <script>
+            let saveFile = () => {
+
+                // Get the data from each element on the form.
+                const note = document.getElementById('note-textarea');
+                //   console.log(note)
+                if (note.value.length > 0) {
+                    let data =
+                        '   SMART CLASS NOTES \r' + '   ------------------' + ' \n ' +
+                        note.value + ' \r\n '
+
+                    // Convert the text to BLOB.
+                    const textToBLOB = new Blob([data], {
+                        type: 'text/plain'
+                    });
+                    const sFileName = 'Smart Class Notes.txt'; // The file to save the data.
+
+                    let newLink = document.createElement("a");
+                    newLink.download = sFileName;
+
+                    if (window.webkitURL != null) {
+                        newLink.href = window.webkitURL.createObjectURL(textToBLOB);
+                    } else {
+                        newLink.href = window.URL.createObjectURL(textToBLOB);
+                        newLink.style.display = "none";
+                        document.body.appendChild(newLink);
+                    }
+
+                    newLink.click();
+                } else {
+                    instructions.text('Could not download empty note. Please add a message to your note.');
+                }
+            }
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="./js/script.js"></script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="./css/analyzer.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <title>Attentiveness Tracker</title>
+  </head>
+  <script type="text/javascript" src="./js/canvas.min.js">
+  </script>
+
+
+  <body>
+    <div class="services-section">
+      <div class="inner-width">
+        <h1 class="section-title">Attentiveness Tracker</h1>
+        <div class="border"></div>
+        <div class="services-container">
+            <button class="btn btn-1 btn-1b" type="button" onclick="init()"><h1>     Start</button></h1>
+            <div id="webcam-container" style="display: none;"></div>
+            <div id="label-container" style="color: white; margin-top: 25px;"></div>
+            <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+
+
+
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+  <script type="text/javascript">
+
+
+      // the link to your model provided by Teachable Machine export panel
+      const URL = "https://teachablemachine.withgoogle.com/models/XXHKJqiZj/";
+
+      let model, webcam, labelContainer, maxPredictions;
+
+      // Load the image model and setup the webcam
+      async function init() {
+          const modelURL = URL + "model.json";
+          const metadataURL = URL + "metadata.json";
+
+
+          model = await tmImage.load(modelURL, metadataURL);
+          maxPredictions = model.getTotalClasses();
+
+          // Convenience function to setup a webcam
+          const flip = true;
+          webcam = new tmImage.Webcam(200, 200, flip);
+          await webcam.setup();
+          await webcam.play();
+          window.requestAnimationFrame(loop);
+
+          // append elements to the DOM
+          document.getElementById("webcam-container").appendChild(webcam.canvas);
+          labelContainer = document.getElementById("label-container");
+          for (let i = 0; i < maxPredictions; i++) { // and class labels
+              labelContainer.appendChild(document.createElement("div"));
+          }
+      }
+
+      async function loop() {
+          webcam.update(); // update the webcam frame
+          await predict();
+          window.requestAnimationFrame(loop);
+      }
+
+
+      var dataPoints = [{
+          y: 10
+      }, {
+          y: 20
+      }, {
+          y: 30
+      }, {
+          y: 40
+      }, {
+          y: 50
+      }, {
+          y: 60
+      }, {
+          y: 70
+      }, {
+          y: 80
+      }];
+      var chart = new CanvasJS.Chart("chartContainer", {
+          title: {
+              text: "Attentiveness Graph"
+          },
+          data: [{
+              type: "spline",
+              dataPoints: dataPoints
+          }]
+      });
+
+      chart.render();
+
+
+      // run the webcam image through the image model
+      // var arr = []
+      async function predict() {
+          // predict can take in an image, video or canvas html element
+          const prediction = await model.predict(webcam.canvas);
+
+
+
+          // arr.push(prediction[0].probability)
+          // console.log(arr)
+
+          for (let i = 0; i < maxPredictions; i++) {
+              const classPrediction =
+                  prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+              labelContainer.childNodes[i].innerHTML = classPrediction;
+
+          }
+
+          var yVal = prediction[0].probability * 100,
+              updateCount = 0;
+          var updateChart = function() {
+
+              yVal = prediction[0].probability * 100;
+              updateCount++;
+
+              dataPoints.push({
+                  y: yVal
+              });
+
+              chart.options.title.text = "Attentiveness Graph";
+              setTimeout(function() {
+                  chart.render()
+              }, 5000);
+
+          };
+
+          // update chart every second
+          setTimeout(function() {
+              updateChart()
+          }, 2000);
+
+      }
+  </script>
+  </body>
+</html>
+
+
+

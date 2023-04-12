@@ -1,0 +1,26 @@
+{
+  "name": "hackthisfall-easel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eas-El/EasEl.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Eas-El/EasEl/issues"
+  },
+  "homepage": "https://github.com/Eas-El/EasEl#readme",
+  "dependencies": {
+    "@digitalsamba/embedded-sdk": "^0.0.12",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1"
+  }
+}
